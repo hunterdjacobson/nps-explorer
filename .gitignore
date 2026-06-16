@@ -37,6 +37,7 @@ venv/
 
 # Raw GeoJSON 
 scripts/nps_boundaries_raw.geojson
+scripts/nps_boundaries_raw.gdb.zip
 
 # Vite / Frontend additions
 .vite/
