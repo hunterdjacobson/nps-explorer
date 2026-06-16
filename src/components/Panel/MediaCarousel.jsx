@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 /**
  * Renders an interactive photo carousel for the selected park with arrow navigations
@@ -8,8 +8,14 @@ export default function MediaCarousel({ images }) {
   if (!images || images.length === 0) return null;
 
   const [activeIndex, setActiveIndex] = useState(0);
+  const [imageLoaded, setImageLoaded] = useState(false);
   const displayImages = images.slice(0, 8);
   const currentImage = displayImages[activeIndex];
+
+  // Reset loaded state when active index changes
+  useEffect(() => {
+    setImageLoaded(false);
+  }, [activeIndex]);
 
   const handlePrev = (e) => {
     e.stopPropagation();
@@ -32,7 +38,10 @@ export default function MediaCarousel({ images }) {
         <img
           src={currentImage.url}
           alt={currentImage.title || 'Park photo'}
-          className="w-full h-full object-cover"
+          onLoad={() => setImageLoaded(true)}
+          className={`w-full h-full object-cover transition-opacity duration-300 ${
+            imageLoaded ? 'opacity-100' : 'opacity-0'
+          }`}
           loading="lazy"
         />
 

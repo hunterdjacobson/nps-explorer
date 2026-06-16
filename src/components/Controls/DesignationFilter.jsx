@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import useAppStore from '../../store/useAppStore';
 import { DESIGNATION_CONFIG, DESIGNATION_ORDER } from '../../constants/designations';
 
@@ -59,4 +60,4 @@ function DesignationFilter() {
   );
 }
 
-export default DesignationFilter;
+export default memo(DesignationFilter);

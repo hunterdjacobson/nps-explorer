@@ -1,6 +1,11 @@
 const API_KEY = import.meta.env.VITE_NPS_API_KEY;
 const BASE_URL = 'https://developer.nps.gov/api/v1';
 
+// In-memory cache for performance
+const cache = new Map();
+const CACHE_TTL_MS = 5 * 60 * 1000;
+
+
 /**
  * Parses a latLong string from the NPS API (e.g. "lat:37.84883584, long:-119.5571873")
  * and extracts the coordinates as float numbers.
@@ -138,6 +143,12 @@ export async function fetchParkByCode(parkCode, { signal } = {}) {
  * @returns {Promise<Array>} List of alerts (non-critical, returns empty array on error)
  */
 export async function fetchParkAlerts(parkCode, { signal } = {}) {
+  const cacheKey = `fetchParkAlerts:${parkCode}`;
+  const cached = cache.get(cacheKey);
+  if (cached && Date.now() - cached.timestamp < CACHE_TTL_MS) {
+    return cached.data;
+  }
+
   const path = '/alerts';
   console.log('[NPS] GET', path);
 
@@ -150,7 +161,9 @@ export async function fetchParkAlerts(parkCode, { signal } = {}) {
     }
 
     const json = await response.json();
-    return json.data || [];
+    const result = json.data || [];
+    cache.set(cacheKey, { data: result, timestamp: Date.now() });
+    return result;
   } catch (err) {
     console.error('[NPS] Failed to fetch alerts:', err);
     return [];
@@ -165,6 +178,12 @@ export async function fetchParkAlerts(parkCode, { signal } = {}) {
  * @returns {Promise<Array>} List of visitor centers with valid lat/lon
  */
 export async function fetchVisitorCenters(parkCode, { signal } = {}) {
+  const cacheKey = `fetchVisitorCenters:${parkCode}`;
+  const cached = cache.get(cacheKey);
+  if (cached && Date.now() - cached.timestamp < CACHE_TTL_MS) {
+    return cached.data;
+  }
+
   const path = '/visitorcenters';
   console.log('[NPS] GET', path);
 
@@ -179,12 +198,15 @@ export async function fetchVisitorCenters(parkCode, { signal } = {}) {
     const json = await response.json();
     const data = json.data || [];
 
-    return data
+    const result = data
       .map((item) => {
         const { lat, lon } = parseLatLon(item.latLong);
         return { ...item, lat, lon };
       })
       .filter((item) => item.lat !== null);
+
+    cache.set(cacheKey, { data: result, timestamp: Date.now() });
+    return result;
   } catch (err) {
     console.error('[NPS] Failed to fetch visitor centers:', err);
     return [];
@@ -199,6 +221,12 @@ export async function fetchVisitorCenters(parkCode, { signal } = {}) {
  * @returns {Promise<Array>} List of campgrounds with valid lat/lon
  */
 export async function fetchCampgrounds(parkCode, { signal } = {}) {
+  const cacheKey = `fetchCampgrounds:${parkCode}`;
+  const cached = cache.get(cacheKey);
+  if (cached && Date.now() - cached.timestamp < CACHE_TTL_MS) {
+    return cached.data;
+  }
+
   const path = '/campgrounds';
   console.log('[NPS] GET', path);
 
@@ -213,12 +241,15 @@ export async function fetchCampgrounds(parkCode, { signal } = {}) {
     const json = await response.json();
     const data = json.data || [];
 
-    return data
+    const result = data
       .map((item) => {
         const { lat, lon } = parseLatLon(item.latLong);
         return { ...item, lat, lon };
       })
       .filter((item) => item.lat !== null);
+
+    cache.set(cacheKey, { data: result, timestamp: Date.now() });
+    return result;
   } catch (err) {
     console.error('[NPS] Failed to fetch campgrounds:', err);
     return [];

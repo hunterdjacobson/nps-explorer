@@ -1,6 +1,6 @@
 import maplibregl from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, memo } from 'react';
 import useAppStore from '../../store/useAppStore';
 import { MAPTILER_STYLE_URL, INITIAL_VIEW_STATE } from '../../constants/mapConfig';
 import { useBoundaryLayers, useDesignationVisibility } from './useBoundaryLayers';
@@ -40,4 +40,4 @@ function MapView() {
   return <div ref={mapContainer} className="w-full h-full" />;
 }
 
-export default MapView;
+export default memo(MapView);
