@@ -2,6 +2,8 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useEffect } from 'react';
 import MapView from './components/Map/MapView';
 import DesignationFilter from './components/Controls/DesignationFilter';
+import Tooltip from './components/UI/Tooltip';
+import DetailPanel from './components/Panel/DetailPanel';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -22,6 +24,8 @@ function App() {
       <div className="w-screen h-screen bg-slate-900 overflow-hidden relative">
         <MapView />
         <DesignationFilter />
+        <Tooltip />
+        <DetailPanel />
         {/* UI overlays — added in subsequent steps */}
       </div>
     </QueryClientProvider>
