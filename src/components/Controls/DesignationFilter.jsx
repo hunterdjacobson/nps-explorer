@@ -8,7 +8,7 @@ function DesignationFilter() {
   const disableAllDesignations = useAppStore((state) => state.disableAllDesignations);
 
   return (
-    <div className="absolute bottom-6 left-4 z-10 bg-slate-900/85 backdrop-blur-sm rounded-xl border border-slate-700/50 p-3 w-72">
+    <div className="absolute bottom-6 md:bottom-6 left-4 z-10 bg-slate-900/85 backdrop-blur-sm rounded-xl border border-slate-700/50 p-3 w-64 md:w-72">
       <div className="flex justify-between items-center mb-2">
         <span className="text-slate-400 text-xs font-medium uppercase tracking-wider">
           Layers

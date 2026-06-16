@@ -18,10 +18,15 @@ export default function DetailPanel() {
 
   return (
     <div
-      className={`fixed top-0 left-0 h-full z-20 overflow-hidden bg-slate-900/96 backdrop-blur-md border-r border-slate-700/40 transition-transform duration-300 ease-in-out w-full max-w-sm flex flex-col ${
-        panelOpen ? 'translate-x-0' : '-translate-x-full'
+      className={`fixed z-20 transition-transform duration-300 ease-in-out bg-slate-900/97 backdrop-blur-md overflow-hidden bottom-0 left-0 right-0 rounded-t-2xl h-[72vh] flex flex-col ${
+        panelOpen ? 'translate-y-0' : 'translate-y-full'
+      } md:top-0 md:bottom-auto md:left-0 md:right-auto md:h-full md:w-full md:max-w-sm md:rounded-none md:translate-y-0 ${
+        panelOpen ? 'md:translate-x-0' : 'md:-translate-x-full'
       }`}
     >
+      <div className="md:hidden flex justify-center pt-3 pb-1 flex-shrink-0">
+        <div className="w-10 h-1 bg-slate-600 rounded-full" />
+      </div>
       {/* Top Bar */}
       <div className="flex-shrink-0 flex items-center justify-between p-3 border-b border-slate-700/40 bg-slate-900">
         <span className="text-slate-500 text-xs font-medium uppercase tracking-wider">
