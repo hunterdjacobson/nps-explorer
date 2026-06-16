@@ -1,0 +1,19 @@
+@import 'maplibre-gl/dist/maplibre-gl.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Reduce MapLibre attribution opacity */
+.maplibregl-ctrl-attrib {
+  opacity: 0.35;
+}
+.maplibregl-ctrl-attrib:hover {
+  opacity: 1;
+  transition: opacity 0.2s;
+}
+
+/* Thin dark scrollbar for the detail panel */
+.panel-scroll::-webkit-scrollbar { width: 4px; }
+.panel-scroll::-webkit-scrollbar-track { background: transparent; }
+.panel-scroll::-webkit-scrollbar-thumb { background: #475569; border-radius: 2px; }
