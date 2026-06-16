@@ -5,7 +5,7 @@ import useAppStore from '../../store/useAppStore';
 import { MAPTILER_STYLE_URL, INITIAL_VIEW_STATE } from '../../constants/mapConfig';
 import { useBoundaryLayers, useDesignationVisibility } from './useBoundaryLayers';
 import useMapSetup from './useMapSetup';
-//import useMarkerLayers from './useMarkerLayers';
+import useMarkerLayers from './useMarkerLayers';
 
 function MapView() {
   const mapContainer = useRef(null);
@@ -35,7 +35,7 @@ function MapView() {
   useBoundaryLayers();
   useDesignationVisibility();
   useMapSetup();
-  //useMarkerLayers();
+  useMarkerLayers();
 
   return <div ref={mapContainer} className="w-full h-full" />;
 }
