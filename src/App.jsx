@@ -4,6 +4,8 @@ import MapView from './components/Map/MapView';
 import DesignationFilter from './components/Controls/DesignationFilter';
 import Tooltip from './components/UI/Tooltip';
 import DetailPanel from './components/Panel/DetailPanel';
+import SearchBar from './components/Controls/SearchBar';
+import SurpriseButton from './components/Controls/SurpriseButton';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -23,9 +25,11 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <div className="w-screen h-screen bg-slate-900 overflow-hidden relative">
         <MapView />
+        <SearchBar />
         <DesignationFilter />
         <Tooltip />
         <DetailPanel />
+        <SurpriseButton />
         {/* UI overlays — added in subsequent steps */}
       </div>
     </QueryClientProvider>
