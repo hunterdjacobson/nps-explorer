@@ -4,6 +4,7 @@ import HeroSection from './HeroSection';
 import StatsRow from './StatsRow';
 import AlertsSection from './AlertsSection';
 import VisitorCenters from './VisitorCenters';
+import ThingsToDoSection from './ThingsToDoSection';
 import MediaCarousel from './MediaCarousel';
 import { SkeletonCard } from '../UI/LoadingSkeleton';
 
@@ -71,6 +72,7 @@ export default function DetailPanel() {
                 <AlertsSection parkCode={selectedPark.parkCode} />
                 <MediaCarousel images={selectedPark.images || []} />
                 <VisitorCenters parkCode={selectedPark.parkCode} />
+                <ThingsToDoSection parkCode={selectedPark.parkCode} />
               </div>
             </>
           )
