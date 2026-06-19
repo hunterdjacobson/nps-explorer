@@ -28,6 +28,9 @@ export default function SurpriseButton() {
 
     const randomPark = parks[Math.floor(Math.random() * parks.length)];
 
+    // Reset active layers back to default (All) so the park is visible
+    useAppStore.getState().enableAllDesignations();
+
     // Update global store
     useAppStore.getState().setSelectedPark(randomPark);
 
