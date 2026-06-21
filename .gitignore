@@ -41,6 +41,8 @@ scripts/nps_boundaries_raw.gdb.zip
 scripts/map_visitation.cjs
 scripts/map_visitation.js
 
+public/data/park_visitation_2025.csv
+
 # Vite / Frontend additions
 .vite/
 tsconfig.node.json
