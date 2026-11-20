@@ -70,7 +70,8 @@ export default function DetailPanel() {
                 )}
 
                 <AlertsSection parkCode={selectedPark.parkCode} />
-                <MediaCarousel images={selectedPark.images || []} />
+                {/* key: start each park at its first photo */}
+                <MediaCarousel key={selectedPark.parkCode} images={selectedPark.images || []} />
                 <VisitorCenters parkCode={selectedPark.parkCode} />
                 <ThingsToDoSection parkCode={selectedPark.parkCode} />
               </div>
