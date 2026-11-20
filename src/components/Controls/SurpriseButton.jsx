@@ -35,6 +35,7 @@ function getRepresentativeCoordinate(geometry) {
  */
 export default function SurpriseButton() {
   const [isAnimating, setIsAnimating] = useState(false);
+  const [isJerking, setIsJerking] = useState(false);
   const activeDesignations = useAppStore((state) => state.activeDesignations);
 
   // Fetch the static boundaries GeoJSON to get all parks and their designation keys
@@ -52,10 +53,12 @@ export default function SurpriseButton() {
 
   const handleSurprise = async () => {
     setIsAnimating(true);
+    setIsJerking(true);
     const features = geojsonData?.features || [];
 
     if (!features.length || activeDesignations.size === 0) {
       setIsAnimating(false);
+      setIsJerking(false);
       return;
     }
 
@@ -67,10 +70,22 @@ export default function SurpriseButton() {
 
     if (!filteredFeatures.length) {
       setIsAnimating(false);
+      setIsJerking(false);
       return;
     }
 
-    const randomFeature = filteredFeatures[Math.floor(Math.random() * filteredFeatures.length)];
+    let randomFeature = filteredFeatures[Math.floor(Math.random() * filteredFeatures.length)];
+    const currentParkCode = useAppStore.getState().selectedPark?.parkCode;
+
+    // If it rolls the same park, reroll to a new park without telling the user
+    const otherFeatures = filteredFeatures.filter(
+      (feature) => feature.properties?.parkCode && feature.properties.parkCode !== currentParkCode
+    );
+
+    if (currentParkCode && randomFeature.properties?.parkCode === currentParkCode && otherFeatures.length > 0) {
+      randomFeature = otherFeatures[Math.floor(Math.random() * otherFeatures.length)];
+    }
+
     const { parkCode, parkName, designationType } = randomFeature.properties;
 
     // Immediately open panel with a placeholder so the user sees a loading state
@@ -104,6 +119,10 @@ export default function SurpriseButton() {
     }
 
     setTimeout(() => {
+      setIsJerking(false);
+    }, 450);
+
+    setTimeout(() => {
       setIsAnimating(false);
     }, 1500);
   };
@@ -113,7 +132,9 @@ export default function SurpriseButton() {
       type="button"
       onClick={handleSurprise}
       disabled={isLoading || isAnimating || activeDesignations.size === 0}
-      className="absolute bottom-6 right-4 z-10 bg-slate-800/90 backdrop-blur-sm border border-slate-700/50 text-white text-sm px-4 py-2.5 rounded-xl hover:bg-slate-700/80 transition-all flex items-center gap-2 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+      className={`absolute bottom-6 right-4 z-10 bg-slate-800/90 backdrop-blur-sm border border-slate-700/50 text-white text-sm px-4 py-2.5 rounded-xl hover:bg-slate-700/80 transition-all flex items-center gap-2 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer ${
+        isJerking ? 'animate-jerk' : ''
+      }`}
     >
       <span className={`inline-block ${isAnimating ? 'animate-spin' : ''}`} role="img" aria-label="dice">
         🎲
