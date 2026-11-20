@@ -1,7 +1,8 @@
 import { create } from 'zustand';
 import { DESIGNATION_ORDER } from '../constants/designations';
+import { fetchParkByCode } from '../api/npsClient';
 
-const useAppStore = create((set) => ({
+const useAppStore = create((set, get) => ({
   // State
   mapInstance: null,
   selectedPark: null,
@@ -15,6 +16,29 @@ const useAppStore = create((set) => ({
   setMapInstance: (map) => set({ mapInstance: map }),
 
   setSelectedPark: (park) => set({ selectedPark: park, panelOpen: park !== null }),
+
+  /**
+   * Opens the panel with a loading placeholder, then replaces it with the full
+   * park or an `_error` placeholder. Skips the update if the selection changed
+   * in the meantime. Never rejects.
+   */
+  openPark: async ({ parkCode, fullName, designation }) => {
+    const placeholder = { parkCode, fullName, designation, _loading: true };
+    set({ selectedPark: placeholder, panelOpen: true });
+
+    let park = null;
+    let error = 'not-found';
+    try {
+      park = await fetchParkByCode(parkCode);
+    } catch (err) {
+      error = 'fetch-failed';
+      console.error('[openPark] Park fetch failed:', err.message);
+    }
+
+    if (get().selectedPark !== placeholder) return;
+
+    set({ selectedPark: park ?? { parkCode, fullName, designation, _error: error } });
+  },
 
   closePanel: () => set({ panelOpen: false, selectedPark: null }),
 

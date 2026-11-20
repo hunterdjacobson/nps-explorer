@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { fetchParkByCode } from '../../api/npsClient';
 import useAppStore from '../../store/useAppStore';
 
 /**
@@ -73,12 +72,11 @@ export default function SurpriseButton() {
     const randomFeature = filteredFeatures[Math.floor(Math.random() * filteredFeatures.length)];
     const { parkCode, parkName, designationType } = randomFeature.properties;
 
-    // Immediately open panel with a placeholder so the user sees a loading state
-    useAppStore.getState().setSelectedPark({
+    // Open the panel right away; full park data loads in the background
+    const parkLoaded = useAppStore.getState().openPark({
       parkCode,
       fullName: parkName,
       designation: designationType,
-      _loading: true,
     });
 
     // Fly to the park immediately
@@ -92,16 +90,7 @@ export default function SurpriseButton() {
       });
     }
 
-    // Fetch full park data in the background
-    try {
-      const fullPark = await fetchParkByCode(parkCode);
-      const currentSelected = useAppStore.getState().selectedPark;
-      if (fullPark && currentSelected?.parkCode === parkCode) {
-        useAppStore.getState().setSelectedPark(fullPark);
-      }
-    } catch (err) {
-      console.error('[SurpriseButton] Park fetch failed:', err.message);
-    }
+    await parkLoaded;
 
     setTimeout(() => {
       setIsAnimating(false);

@@ -112,8 +112,28 @@ export async function fetchAllParks({ limit = 50, start = 0, signal } = {}) {
 }
 
 /**
+ * Boundary GeoJSON unit codes that differ from the NPS API parkCode.
+ * naca, pima and rrbh have no API entry at all.
+ */
+const PARK_CODE_ALIASES = {
+  sequ: 'seki', // Sequoia NP
+  kica: 'seki', // Kings Canyon NP
+  jefm: 'thje', // Thomas Jefferson Memorial
+  mall: 'nama', // National Mall
+  perl: 'valr', // Pearl Harbor NMem
+  mabe: 'mamc', // Mary McLeod Bethune Council House NHS
+  obri: 'obed', // Obed WSR
+  dela: 'dewa', // Middle Delaware NSR
+  losa: 'sacn', // Lower Saint Croix NSR
+  rola: 'noca', // Ross Lake NRA
+  lach: 'noca', // Lake Chelan NRA
+  jodr: 'grte', // John D. Rockefeller, Jr. Memorial Parkway
+  foca: 'timu', // Fort Caroline NMem
+};
+
+/**
  * Fetches a single park detail by its code.
- * @param {string} parkCode - NPS park code (e.g. "yose")
+ * @param {string} parkCode - NPS park code (e.g. "yose") or boundary unit code
  * @param {{signal?: AbortSignal}} options
  * @returns {Promise<object|null>} Park data object or null if not found
  */
@@ -122,7 +142,8 @@ export async function fetchParkByCode(parkCode, { signal } = {}) {
   console.log('[NPS] GET', path);
 
   try {
-    const url = buildUrl(path, { parkCode, limit: 1 });
+    const apiParkCode = PARK_CODE_ALIASES[parkCode] ?? parkCode;
+    const url = buildUrl(path, { parkCode: apiParkCode, limit: 1 });
     const response = await fetch(url, { signal });
 
     if (!response.ok) {

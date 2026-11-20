@@ -2,7 +2,6 @@ import { useEffect } from 'react';
 import useAppStore from '../../store/useAppStore';
 import { DESIGNATION_ORDER, FILL_LAYER_ID } from '../../constants/designations';
 import { FLY_TO_OPTIONS } from '../../constants/mapConfig';
-import { fetchParkByCode } from '../../api/npsClient';
 
 /**
  * Custom hook to set up hover (tooltip/highlight) and click event listeners
@@ -59,17 +58,16 @@ export default function useMapSetup() {
       mapInstance.getCanvas().style.cursor = '';
     };
 
-    const handleClick = async (e) => {
+    const handleClick = (e) => {
       if (!e.features || !e.features.length) return;
 
       const { parkCode, parkName, designationType } = e.features[0].properties;
 
-      // Immediately open panel with placeholder so user sees something
-      useAppStore.getState().setSelectedPark({
+      // Open the panel right away; full park data loads in the background
+      useAppStore.getState().openPark({
         parkCode,
         fullName: parkName,
         designation: designationType,
-        _loading: true,
       });
 
       // Fly to click location (center on the click point, not park centroid)
@@ -80,16 +78,6 @@ export default function useMapSetup() {
         essential: true,
         padding: FLY_TO_OPTIONS.padding,
       });
-
-      // Fetch full park data in background
-      try {
-        const fullPark = await fetchParkByCode(parkCode);
-        if (fullPark) {
-          useAppStore.getState().setSelectedPark(fullPark);
-        }
-      } catch (err) {
-        console.error('[useMapSetup] Park fetch failed:', err.message);
-      }
     };
 
     // Attach listeners

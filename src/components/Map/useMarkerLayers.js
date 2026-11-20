@@ -48,8 +48,8 @@ export default function useMarkerLayers() {
       }
     };
 
-    // If no park selected or it is loading, perform cleanup and exit
-    if (!selectedPark || selectedPark._loading) {
+    // If no park selected, or it is loading or failed, perform cleanup and exit
+    if (!selectedPark || selectedPark._loading || selectedPark._error) {
       cleanup();
       return;
     }

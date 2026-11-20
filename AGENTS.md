@@ -48,13 +48,14 @@ directly from the browser (CORS is allowed).
 ## Zustand store shape
 {
   mapInstance: null,
-  selectedPark: null,         // null or NPS park object (may have _loading: true)
+  selectedPark: null,         // null or NPS park object (may have _loading: true,
+                              // or _error: 'not-found' | 'fetch-failed')
   panelOpen: false,
   activeDesignations: Set(['national-park', 'national-monument', ...all keys]),
   hoveredParkCode: null,
   hoveredParkName: null,
   searchResults: [],
-  // Actions: setMapInstance, setSelectedPark, closePanel, toggleDesignation,
+  // Actions: setMapInstance, setSelectedPark, openPark, closePanel, toggleDesignation,
   //          enableAllDesignations, disableAllDesignations,
   //          setHoveredParkCode, setHoveredParkName, setSearchResults
 }

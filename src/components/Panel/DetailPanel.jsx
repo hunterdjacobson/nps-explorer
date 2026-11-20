@@ -9,6 +9,35 @@ import MediaCarousel from './MediaCarousel';
 import { SkeletonCard } from '../UI/LoadingSkeleton';
 
 /**
+ * Panel body for a park whose details couldn't be loaded.
+ */
+function ParkUnavailable({ park }) {
+  const openPark = useAppStore((state) => state.openPark);
+  const canRetry = park._error === 'fetch-failed';
+
+  return (
+    <>
+      <HeroSection park={park} />
+      <div className="p-4 space-y-3">
+        <p className="text-slate-400 text-sm">
+          {canRetry
+            ? "Couldn't load park details from NPS.gov."
+            : 'NPS.gov has no park details for this unit.'}
+        </p>
+        {canRetry && (
+          <button
+            onClick={() => openPark(park)}
+            className="text-sm text-white bg-slate-800 hover:bg-slate-700 border border-slate-700/50 rounded-lg px-3 py-1.5 transition-colors cursor-pointer"
+          >
+            Try again
+          </button>
+        )}
+      </div>
+    </>
+  );
+}
+
+/**
  * Slide-out detail panel showing full NPS park information (description, images, alerts, centers).
  * Slides in from the left and overlays the map.
  */
@@ -50,6 +79,8 @@ export default function DetailPanel() {
             <div className="h-44 bg-slate-700/60 rounded-lg animate-pulse mb-4" />
             <SkeletonCard />
           </div>
+        ) : selectedPark && selectedPark._error ? (
+          <ParkUnavailable park={selectedPark} />
         ) : (
           selectedPark && (
             <>
